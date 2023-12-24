@@ -1,0 +1,14 @@
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\bin\Debug\net7.0\Data.deps.json
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\bin\Debug\net7.0\Data.runtimeconfig.json
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\bin\Debug\net7.0\Data.dll
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\bin\Debug\net7.0\Data.pdb
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\Data.csproj.AssemblyReference.cache
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\Data.GeneratedMSBuildEditorConfig.editorconfig
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\Data.AssemblyInfoInputs.cache
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\Data.AssemblyInfo.cs
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\Data.csproj.CoreCompileInputs.cache
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\Data.dll
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\refint\Data.dll
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\Data.pdb
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\Data.genruntimeconfig.cache
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\ref\Data.dll

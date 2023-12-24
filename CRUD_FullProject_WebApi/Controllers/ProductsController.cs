@@ -37,7 +37,6 @@ namespace CRUD_FullProject_WebApi.Controllers
 
             var productDtos = _mapper.Map<List<ProductDto>>(products);
             
-            /*
             var paginationHeader = new
             {
                 totalItems,
@@ -47,7 +46,6 @@ namespace CRUD_FullProject_WebApi.Controllers
             };
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationHeader));
-            */
 
             return Ok(productDtos);
         }
@@ -151,6 +149,81 @@ namespace CRUD_FullProject_WebApi.Controllers
         {
             return _context.Products.Any(e => e.Id == id);
         }
-        
+
+        [HttpGet]
+        public async Task<IActionResult> SearchProducts([FromQuery] ProductSearchModel searchModel)
+        {
+            var query = _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Images)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchModel.Name))
+            {
+                query = query.Where(p => p.Name.Contains(searchModel.Name));
+            }
+
+            if (!string.IsNullOrEmpty(searchModel.Description))
+            {
+                query = query.Where(p => p.Description.Contains(searchModel.Description));
+            }
+
+            if (searchModel.Price.HasValue)
+            {
+                query = query.Where(p => p.Price == searchModel.Price);
+            }
+
+            if (searchModel.IsApproved.HasValue)
+            {
+                query = query.Where(p => p.IsApproved == searchModel.IsApproved);
+            }
+
+            if (searchModel.IsDeleted.HasValue)
+            {
+                query = query.Where(p => p.IsDeleted == searchModel.IsDeleted);
+            }
+
+            if (searchModel.CreateDate.HasValue)
+            {
+                query = query.Where(p => p.CreateDate == searchModel.CreateDate);
+            }
+
+            if (searchModel.UpdateDate.HasValue)
+            {
+                query = query.Where(p => p.UpdateDate == searchModel.UpdateDate);
+            }
+
+            if (searchModel.Stock.HasValue)
+            {
+                query = query.Where(p => p.Stock == searchModel.Stock);
+            }
+
+            if (searchModel.CategoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == searchModel.CategoryId);
+            }
+
+            var totalItems = await query.CountAsync();
+
+            var products = await query
+                .OrderBy(p => p.Id)
+                .ToListAsync();
+
+            var productDtos = _mapper.Map<List<ProductDto>>(products);
+
+            var paginationHeader = new
+            {
+                totalItems,
+                pageSize = products.Count,
+                pageNumber = 1,
+                totalPages = 1
+            };
+
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationHeader));
+
+            return Ok(productDtos);
+        }
+
+
     }
 }

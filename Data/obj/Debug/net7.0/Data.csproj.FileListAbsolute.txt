@@ -12,3 +12,4 @@ D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\refint\Data
 D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\Data.pdb
 D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\Data.genruntimeconfig.cache
 D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\ref\Data.dll
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\Data\obj\Debug\net7.0\Data.sourcelink.json

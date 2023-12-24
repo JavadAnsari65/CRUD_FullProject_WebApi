@@ -31,12 +31,13 @@ namespace CRUD_FullProject_WebApi.Controllers
                 .Include(p => p.Category)
                 .Include(p => p.Images)
                 .OrderBy(p => p.Id) // یا می‌توانید بر اساس فیلد دیگری مانند CreateDate یا یک فیلد دلخواه دیگر مرتب‌سازی کنید.
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+                .Skip((pageNumber - 1) * pageSize)   // از ایتدای رکوردها به تعداد Skip رکورد صرفنظر کن برو جلو
+                .Take(pageSize)     // از جایی که اشاره گر رکوردها هست به تعداد Take رکورد رو برگردون
                 .ToListAsync();
 
             var productDtos = _mapper.Map<List<ProductDto>>(products);
-
+            
+            /*
             var paginationHeader = new
             {
                 totalItems,
@@ -46,6 +47,7 @@ namespace CRUD_FullProject_WebApi.Controllers
             };
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationHeader));
+            */
 
             return Ok(productDtos);
         }

@@ -18,7 +18,7 @@ namespace Data.Dto
         public string ImageUrl { get; set; }
         public int Stock { get; set; }
         public int CategoryId { get; set; }
-        //public CategoryDto Category { get; set; }
+        public CategoryDto Category { get; set; }
         public List<ImagesDto> Images { get; set; }
     }
 }

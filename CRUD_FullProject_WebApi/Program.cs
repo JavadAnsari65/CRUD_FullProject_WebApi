@@ -1,11 +1,13 @@
 using Data.Context;
+using Data.Mapper;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddAutoMapper(typeof(Data.Mapper.AppMapperProfile));
+//builder.Services.AddAutoMapper(typeof(Data.Mapper.AppMapperProfile));
+builder.Services.AddAutoMapper(typeof(AppMapperProfile));
 
 builder.Services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
 

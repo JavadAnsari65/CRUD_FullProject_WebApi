@@ -81,3 +81,7 @@ D:\Hampadco\Excercises\CRUD_FullProject_WebApi\CRUD_FullProject_WebApi\bin\Debug
 D:\Hampadco\Excercises\CRUD_FullProject_WebApi\CRUD_FullProject_WebApi\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 D:\Hampadco\Excercises\CRUD_FullProject_WebApi\CRUD_FullProject_WebApi\bin\Debug\net7.0\Newtonsoft.Json.dll
 D:\Hampadco\Excercises\CRUD_FullProject_WebApi\CRUD_FullProject_WebApi\obj\Debug\net7.0\CRUD_FullProject_WebApi.sourcelink.json
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\CRUD_FullProject_WebApi\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\CRUD_FullProject_WebApi\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\CRUD_FullProject_WebApi\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
+D:\Hampadco\Excercises\CRUD_FullProject_WebApi\CRUD_FullProject_WebApi\bin\Debug\net7.0\CRUD_FullProject_WebApi.staticwebassets.runtime.json

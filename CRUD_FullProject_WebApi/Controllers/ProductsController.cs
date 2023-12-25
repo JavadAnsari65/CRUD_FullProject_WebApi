@@ -2,6 +2,7 @@
 using Data.Context;
 using Data.Dto;
 using Data.Entities;
+using wwwroot.StaticFiles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,6 +36,11 @@ namespace CRUD_FullProject_WebApi.Controllers
                 .Take(pageSize)     // از جایی که اشاره گر رکوردها هست به تعداد Take رکورد رو برگردون
                 .ToListAsync();
 
+            foreach (var product in products)
+            {
+                product.ImageUrl = StaticUrls.ProductImagesUrl + product.ImageUrl;
+            }
+
             var productDtos = _mapper.Map<List<ProductDto>>(products);
             
             var paginationHeader = new
@@ -59,6 +65,11 @@ namespace CRUD_FullProject_WebApi.Controllers
                 .Include(p => p.Images)
                 .ToListAsync();
 
+            foreach (var product in products)
+            {
+                product.ImageUrl = StaticUrls.ProductImagesUrl + product.ImageUrl;
+            }
+
             var productDtos = _mapper.Map<List<ProductDto>>(products);
             return Ok(productDtos);
         }
@@ -70,6 +81,8 @@ namespace CRUD_FullProject_WebApi.Controllers
                 .Include(p => p.Category)
                 .Include(p => p.Images)
                 .FirstOrDefaultAsync(p => p.Id == id);
+
+            product.ImageUrl = StaticUrls.ProductImagesUrl + product.ImageUrl;
 
             if (product == null)
             {
@@ -83,12 +96,20 @@ namespace CRUD_FullProject_WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductDto>> AddProduct(ProductDto productDto)
         {
-            var product = _mapper.Map<Product>(productDto);
+            //upload Image base64 to server
+            var base64 = productDto.ImageUrl.Split(',')[1];
+            var bytes = System.Convert.FromBase64String(base64);    //تیدیل رشته بیس64 به رشته بایت جهت تبدیل به عکس
+            var randName = Guid.NewGuid().ToString();   //تولید نام تصادفی برای عکس
+            productDto.ImageUrl = randName + ".png";    //مقدار دهی فیلد عکس با نام تولید شده و پسوند موردنظر
+            var path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", StaticUrls.ProductImagesUrl + randName + ".png");    //ادغام مسیر و نام عکس موردنظر : ساخت مسیر نهایی
+            //var path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","StaticFiles", "Images", "Products", randName + ".png");
+            System.IO.File.WriteAllBytes(path, bytes);  //ذخیره عکس در مسیر موردنظر
 
+            var product = _mapper.Map<Product>(productDto);
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProductById", new { id = product.Id }, _mapper.Map<ProductDto>(product));
+            //return CreatedAtAction("GetProductById", new { id = product.Id }, _mapper.Map<ProductDto>(product));
+            return Ok(product);
         }
 
         [HttpPut]
@@ -151,12 +172,16 @@ namespace CRUD_FullProject_WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SearchProducts([FromQuery] ProductSearchModel searchModel)
+        public async Task<IActionResult> SearchProducts([FromQuery] ProductSearchModel searchModel, int pageNumber = 1, int pageSize = 5)
         {
+
+            // ساخت یک کوئری پایه برای استخراج محصولات
             var query = _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Images)
                 .AsQueryable();
+
+            // در شرط های زیر به ازای هر فیلد فرم جستجو که مقدار داشته باشد یک شرط به کوئری پایه مان اضافه می شود
 
             if (!string.IsNullOrEmpty(searchModel.Name))
             {
@@ -203,20 +228,34 @@ namespace CRUD_FullProject_WebApi.Controllers
                 query = query.Where(p => p.CategoryId == searchModel.CategoryId);
             }
 
+            // این دستور براساس کوئری ایجاد شده رکوردها را استخراج و تعداد آنها را برمی گرداند
             var totalItems = await query.CountAsync();
 
+            // این دستور بر اساس کوئری ایجاد شده رکوردها را استحراج و براساس فیلد ]ی دی مرتب کرده و برمی گرداند
             var products = await query
                 .OrderBy(p => p.Id)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
+
+            foreach (var product in products)
+            {
+                product.ImageUrl = StaticUrls.ProductImagesUrl + product.ImageUrl;
+            }
+
+            // برای اینکه دوبار عملیات استخراج رکوردها از دیتابیس انجام نشود برای شمارش تعداد رکوردها به جای دستور قبلی
+            //  از این دستور استفاده می کنیم ولی در بخاطر صفجه بندی در شمارش تعداد کل رکوردها به مشکل میخوریم
+            //var totalItems = products.Count();
 
             var productDtos = _mapper.Map<List<ProductDto>>(products);
 
             var paginationHeader = new
             {
                 totalItems,
-                pageSize = products.Count,
-                pageNumber = 1,
-                totalPages = 1
+                pageSize = pageSize,
+                pageNumber = pageNumber,
+                totalPages = totalItems/pageSize+1,
+                //Text = "Welcome Javad"
             };
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationHeader));

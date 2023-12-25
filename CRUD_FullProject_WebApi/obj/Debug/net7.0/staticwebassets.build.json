@@ -1,11 +1,77 @@
 {
   "Version": 1,
-  "Hash": "2eanKU4JtwgOJRTVmqvheaya6kPHwPe1YnLZPHkFT58=",
+  "Hash": "Gkia8nS9hs5gLyXZacCWMl4EBsYRn2ld2/BzMKLSbOc=",
   "Source": "CRUD_FullProject_WebApi",
   "BasePath": "_content/CRUD_FullProject_WebApi",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "CRUD_FullProject_WebApi\\wwwroot",
+      "Source": "CRUD_FullProject_WebApi",
+      "ContentRoot": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\",
+      "BasePath": "_content/CRUD_FullProject_WebApi",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\27210b14-36f5-4a5e-af34-4c7473df2417.png",
+      "SourceId": "CRUD_FullProject_WebApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\",
+      "BasePath": "_content/CRUD_FullProject_WebApi",
+      "RelativePath": "StaticFiles/Images/Products/27210b14-36f5-4a5e-af34-4c7473df2417.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\StaticFiles\\Images\\Products\\27210b14-36f5-4a5e-af34-4c7473df2417.png"
+    },
+    {
+      "Identity": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\45a64595-d215-409e-a2b8-ad8b53fcf4a9.png",
+      "SourceId": "CRUD_FullProject_WebApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\",
+      "BasePath": "_content/CRUD_FullProject_WebApi",
+      "RelativePath": "StaticFiles/Images/Products/45a64595-d215-409e-a2b8-ad8b53fcf4a9.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\StaticFiles\\Images\\Products\\45a64595-d215-409e-a2b8-ad8b53fcf4a9.png"
+    },
+    {
+      "Identity": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\ed560284-abc2-439b-b6b9-af975e557534.png",
+      "SourceId": "CRUD_FullProject_WebApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\",
+      "BasePath": "_content/CRUD_FullProject_WebApi",
+      "RelativePath": "StaticFiles/Images/Products/ed560284-abc2-439b-b6b9-af975e557534.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\StaticFiles\\Images\\Products\\ed560284-abc2-439b-b6b9-af975e557534.png"
+    }
+  ]
 }

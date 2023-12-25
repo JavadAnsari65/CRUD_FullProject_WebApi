@@ -1,0 +1,33 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\27210b14-36f5-4a5e-af34-4c7473df2417.png",
+      "PackagePath": "staticwebassets\\StaticFiles\\Images\\Products\\27210b14-36f5-4a5e-af34-4c7473df2417.png"
+    },
+    {
+      "Id": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\45a64595-d215-409e-a2b8-ad8b53fcf4a9.png",
+      "PackagePath": "staticwebassets\\StaticFiles\\Images\\Products\\45a64595-d215-409e-a2b8-ad8b53fcf4a9.png"
+    },
+    {
+      "Id": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\ed560284-abc2-439b-b6b9-af975e557534.png",
+      "PackagePath": "staticwebassets\\StaticFiles\\Images\\Products\\ed560284-abc2-439b-b6b9-af975e557534.png"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.CRUD_FullProject_WebApi.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.CRUD_FullProject_WebApi.props",
+      "PackagePath": "build\\CRUD_FullProject_WebApi.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.CRUD_FullProject_WebApi.props",
+      "PackagePath": "buildMultiTargeting\\CRUD_FullProject_WebApi.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.CRUD_FullProject_WebApi.props",
+      "PackagePath": "buildTransitive\\CRUD_FullProject_WebApi.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

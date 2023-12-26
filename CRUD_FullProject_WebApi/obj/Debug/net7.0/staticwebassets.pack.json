@@ -1,12 +1,28 @@
 {
   "Files": [
     {
+      "Id": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\043b3f21-6040-4cdd-a02e-bc0932098077.png",
+      "PackagePath": "staticwebassets\\StaticFiles\\Images\\Products\\043b3f21-6040-4cdd-a02e-bc0932098077.png"
+    },
+    {
       "Id": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\27210b14-36f5-4a5e-af34-4c7473df2417.png",
       "PackagePath": "staticwebassets\\StaticFiles\\Images\\Products\\27210b14-36f5-4a5e-af34-4c7473df2417.png"
     },
     {
+      "Id": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\303b57bd-1e42-4471-8bdb-e922b3048671.png",
+      "PackagePath": "staticwebassets\\StaticFiles\\Images\\Products\\303b57bd-1e42-4471-8bdb-e922b3048671.png"
+    },
+    {
       "Id": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\45a64595-d215-409e-a2b8-ad8b53fcf4a9.png",
       "PackagePath": "staticwebassets\\StaticFiles\\Images\\Products\\45a64595-d215-409e-a2b8-ad8b53fcf4a9.png"
+    },
+    {
+      "Id": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\ba2f1624-6813-4953-a0e7-bf17e49bf254.png",
+      "PackagePath": "staticwebassets\\StaticFiles\\Images\\Products\\ba2f1624-6813-4953-a0e7-bf17e49bf254.png"
+    },
+    {
+      "Id": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\e4d97db4-532b-4396-9a5a-85d03133c921.png",
+      "PackagePath": "staticwebassets\\StaticFiles\\Images\\Products\\e4d97db4-532b-4396-9a5a-85d03133c921.png"
     },
     {
       "Id": "D:\\Hampadco\\Excercises\\CRUD_FullProject_WebApi\\CRUD_FullProject_WebApi\\wwwroot\\StaticFiles\\Images\\Products\\ed560284-abc2-439b-b6b9-af975e557534.png",

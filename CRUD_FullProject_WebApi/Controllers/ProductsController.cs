@@ -2,12 +2,16 @@
 using Data.Context;
 using Data.Dto;
 using Data.Entities;
+using Data.SearchClasses;
 using wwwroot.StaticFiles;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.Linq.Expressions;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel;
 
 namespace CRUD_FullProject_WebApi.Controllers
 {
@@ -41,7 +45,7 @@ namespace CRUD_FullProject_WebApi.Controllers
                 product.ImageUrl = StaticUrls.ProductImagesUrl + product.ImageUrl;
             }
 
-            var productDtos = _mapper.Map<List<ProductDto>>(products);
+            var productDtos = _mapper.Map<List<ProductDtoGet>>(products);
             
             var paginationHeader = new
             {
@@ -58,7 +62,7 @@ namespace CRUD_FullProject_WebApi.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductDtoGet>>> GetProducts()
         {
             var products = await _context.Products
                 .Include(p => p.Category)
@@ -70,12 +74,12 @@ namespace CRUD_FullProject_WebApi.Controllers
                 product.ImageUrl = StaticUrls.ProductImagesUrl + product.ImageUrl;
             }
 
-            var productDtos = _mapper.Map<List<ProductDto>>(products);
+            var productDtos = _mapper.Map<List<ProductDtoGet>>(products);
             return Ok(productDtos);
         }
 
         [HttpGet]
-        public async Task<ActionResult<ProductDto>> GetProductById(int id)
+        public async Task<ActionResult<ProductDtoPost>> GetProductById(int id)
         {
             var product = await _context.Products
                 .Include(p => p.Category)
@@ -89,12 +93,12 @@ namespace CRUD_FullProject_WebApi.Controllers
                 return NotFound();
             }
 
-            var productDto = _mapper.Map<ProductDto>(product);
+            var productDto = _mapper.Map<ProductDtoPost>(product);
             return Ok(productDto);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProductDto>> AddProduct(ProductDto productDto)
+        public async Task<ActionResult<ProductDtoPost>> AddProduct(ProductDtoPost productDto)
         {
             //upload Image base64 to server
             var base64 = productDto.ImageUrl.Split(',')[1];
@@ -113,7 +117,7 @@ namespace CRUD_FullProject_WebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProduct(int id, ProductDto productDto)
+        public async Task<IActionResult> UpdateProduct(int id, ProductDtoPost productDto)
         {
 
             if (id != productDto.Id)
@@ -181,6 +185,21 @@ namespace CRUD_FullProject_WebApi.Controllers
                 .Include(p => p.Images)
                 .AsQueryable();
 
+            /*
+            var searchService = new SearchService<Product>();
+
+            // در شرط های زیر به ازای هر فیلد فرم جستجو که مقدار داشته باشد یک شرط به کوئری پایه مان اضافه می شود
+            query = searchService.ApplySearch(query, p => !string.IsNullOrEmpty(searchModel.Name) && p.Name.Contains(searchModel.Name));
+            query = searchService.ApplySearch(query, p => !string.IsNullOrEmpty(searchModel.Description) && p.Description.Contains(searchModel.Description));
+            query = searchService.ApplySearch(query, p => searchModel.Price.HasValue && p.Price == searchModel.Price);
+            query = searchService.ApplySearch(query, p => searchModel.IsApproved.HasValue && p.IsApproved == searchModel.IsApproved);
+            query = searchService.ApplySearch(query, p => searchModel.IsDeleted.HasValue && p.IsDeleted == searchModel.IsDeleted);
+            query = searchService.ApplySearch(query, p => searchModel.CreateDate.HasValue && p.CreateDate == searchModel.CreateDate);
+            query = searchService.ApplySearch(query, p => searchModel.UpdateDate.HasValue && p.UpdateDate == searchModel.UpdateDate);
+            query = searchService.ApplySearch(query, p => searchModel.Stock.HasValue && p.Stock == searchModel.Stock);
+            query = searchService.ApplySearch(query, p => searchModel.CategoryId.HasValue && p.CategoryId == searchModel.CategoryId);
+            */
+
             // در شرط های زیر به ازای هر فیلد فرم جستجو که مقدار داشته باشد یک شرط به کوئری پایه مان اضافه می شود
 
             if (!string.IsNullOrEmpty(searchModel.Name))
@@ -247,14 +266,26 @@ namespace CRUD_FullProject_WebApi.Controllers
             //  از این دستور استفاده می کنیم ولی در بخاطر صفجه بندی در شمارش تعداد کل رکوردها به مشکل میخوریم
             //var totalItems = products.Count();
 
-            var productDtos = _mapper.Map<List<ProductDto>>(products);
+            var productDtos = _mapper.Map<List<ProductDtoGet>>(products);
 
+            //برای محاسبه درست تعداد صفحات
+            int totalPage = 0;
+            if (totalItems % pageSize == 0)
+            {
+                totalPage = totalItems / pageSize;
+            }
+            else
+            {
+                totalPage = totalItems / pageSize + 1;
+            }
+
+            //برای ساخت یک شی جهت نمایش اطلاعات صفحه بندی در هدر
             var paginationHeader = new
             {
                 totalItems,
                 pageSize = pageSize,
                 pageNumber = pageNumber,
-                totalPages = totalItems/pageSize+1,
+                totalPages = totalItems / pageSize + 1,
                 //Text = "Welcome Javad"
             };
 
@@ -262,6 +293,42 @@ namespace CRUD_FullProject_WebApi.Controllers
 
             return Ok(productDtos);
         }
+
+        //[HttpGet("FilterEntities/{fieldName}/{searchValue}")]
+        [HttpGet]
+        public async Task<IActionResult> FilterEntities(string fieldName, string searchValue)
+        {
+            //var query = _context.Products.AsQueryable();
+            var query = _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Images)
+                .AsQueryable();
+
+            var filterService = new EntityFilterService<Product>(query);
+
+            var parameter = Expression.Parameter(typeof(Product), "x");
+            var property = Expression.Property(parameter, fieldName);
+
+            // تبدیل مقدار به نوع مورد نظر (این مثال برای عدد است)
+            object convertedValue = Convert.ChangeType(searchValue, property.Type);
+
+            var constant = Expression.Constant(convertedValue);
+            var equals = Expression.Equal(property, constant);
+            var lambda = Expression.Lambda<Func<Product, bool>>(equals, parameter);
+
+            query = filterService.ApplyFilter(lambda);
+
+            var filteredEntities = await query.ToListAsync();
+
+            var productDtos = _mapper.Map<List<ProductDtoGet>>(filteredEntities);
+
+            // باقی‌مانده کد
+
+            return Ok(productDtos);
+        }
+
+
+
 
 
     }

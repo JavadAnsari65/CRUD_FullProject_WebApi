@@ -43,21 +43,28 @@ namespace CRUD_FullProject_WebApi.Controllers
             foreach (var product in products)
             {
                 product.ImageUrl = StaticUrls.ProductImagesUrl + product.ImageUrl;
+                foreach (var image in product.Images)
+                {
+                    image.Image = StaticUrls.ProductImagesUrl + image.Image;
+                }
             }
 
             var productDtos = _mapper.Map<List<ProductDtoGet>>(products);
-            
-            var paginationHeader = new
+
+            //برای محاسبه درست تعداد صفحات
+            int totalPage = 0;
+            if (totalItems % pageSize == 0)
             {
-                totalItems,
-                pageSize,
-                pageNumber,
-                totalPages = (int)Math.Ceiling((double)totalItems / pageSize)
-            };
+                totalPage = totalItems / pageSize;
+            }
+            else
+            {
+                totalPage = totalItems / pageSize + 1;
+            }
 
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationHeader));
+            //برای نمایش محصولات به همراه اطلاعات صفحه بندی در انتهای آن
+            return Ok(new { Products = productDtos, TotalItems = totalItems, PageSize = pageSize, TotalPages = totalPage, PageNumber = pageNumber });
 
-            return Ok(productDtos);
         }
 
 
@@ -72,6 +79,11 @@ namespace CRUD_FullProject_WebApi.Controllers
             foreach (var product in products)
             {
                 product.ImageUrl = StaticUrls.ProductImagesUrl + product.ImageUrl;
+
+                foreach (var image in product.Images)
+                {
+                    image.Image = StaticUrls.ProductImagesUrl + image.Image;
+                }
             }
 
             var productDtos = _mapper.Map<List<ProductDtoGet>>(products);
@@ -79,21 +91,25 @@ namespace CRUD_FullProject_WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ProductDtoPost>> GetProductById(int id)
+        public async Task<ActionResult<ProductDtoGet>> GetProductById(int id)
         {
             var product = await _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Images)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
-            product.ImageUrl = StaticUrls.ProductImagesUrl + product.ImageUrl;
-
             if (product == null)
             {
                 return NotFound();
             }
 
-            var productDto = _mapper.Map<ProductDtoPost>(product);
+            product.ImageUrl = StaticUrls.ProductImagesUrl + product.ImageUrl;
+            foreach (var image in product.Images)
+            {
+                image.Image = StaticUrls.ProductImagesUrl + image.Image;
+            }
+
+            var productDto = _mapper.Map<ProductDtoGet>(product);
             return Ok(productDto);
         }
 
@@ -102,14 +118,46 @@ namespace CRUD_FullProject_WebApi.Controllers
         {
             //upload Image base64 to server
             var base64 = productDto.ImageUrl.Split(',')[1];
-            var bytes = System.Convert.FromBase64String(base64);    //تیدیل رشته بیس64 به رشته بایت جهت تبدیل به عکس
-            var randName = Guid.NewGuid().ToString();   //تولید نام تصادفی برای عکس
-            productDto.ImageUrl = randName + ".png";    //مقدار دهی فیلد عکس با نام تولید شده و پسوند موردنظر
-            var path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", StaticUrls.ProductImagesUrl + randName + ".png");    //ادغام مسیر و نام عکس موردنظر : ساخت مسیر نهایی
+            //تیدیل رشته بیس64 به رشته بایت جهت تبدیل به عکس
+            var bytes = System.Convert.FromBase64String(base64);
+            //تولید یک نام تصادفی برای عکس
+            var randName = Guid.NewGuid().ToString();
+            //مقدار دهی فیلد عکس با نام تولید شده و پسوند موردنظر
+            productDto.ImageUrl = randName + ".png";
+            //ادغام مسیر و نام عکس موردنظر : ساخت مسیر نهایی
+            var path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", StaticUrls.ProductImagesUrl + randName + ".png");                                                                                                                                                 
             //var path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","StaticFiles", "Images", "Products", randName + ".png");
-            System.IO.File.WriteAllBytes(path, bytes);  //ذخیره عکس در مسیر موردنظر
+            //ساخت و ذخیره عکس در مسیر موردنظر
+            System.IO.File.WriteAllBytes(path, bytes);
+
+
+            // بارگیری و ذخیره تصاویر بیشتر در جدول Images 
+            var additionalImages = new List<Images>();
+            for (int i = 0; i < productDto.Images.Count; i++)
+            {
+                var base64Ex = productDto.Images[i].Image.Split(',')[1];
+                var bytesEx = System.Convert.FromBase64String(base64Ex);
+                var randNameEx = Guid.NewGuid().ToString();
+                var imageUrlEx = randNameEx + ".png";
+                var pathEx = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", StaticUrls.ProductImagesUrl + imageUrlEx);
+                System.IO.File.WriteAllBytes(pathEx, bytesEx);
+
+                // اضافه کردن تصاویر به لیست
+                additionalImages.Add(new Images
+                {
+                    Caption = productDto.Images[i].Caption,
+                    Image = imageUrlEx
+                });
+            }
+
 
             var product = _mapper.Map<Product>(productDto);
+
+            // افزودن تصاویر بیشتر به محصول
+            product.Images = additionalImages;
+
+            //اینجا میتوانیم فیلدهایی از محصول که در productDto نیست را مقداردهی کنیم
+
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
             //return CreatedAtAction("GetProductById", new { id = product.Id }, _mapper.Map<ProductDto>(product));
@@ -185,21 +233,6 @@ namespace CRUD_FullProject_WebApi.Controllers
                 .Include(p => p.Images)
                 .AsQueryable();
 
-            /*
-            var searchService = new SearchService<Product>();
-
-            // در شرط های زیر به ازای هر فیلد فرم جستجو که مقدار داشته باشد یک شرط به کوئری پایه مان اضافه می شود
-            query = searchService.ApplySearch(query, p => !string.IsNullOrEmpty(searchModel.Name) && p.Name.Contains(searchModel.Name));
-            query = searchService.ApplySearch(query, p => !string.IsNullOrEmpty(searchModel.Description) && p.Description.Contains(searchModel.Description));
-            query = searchService.ApplySearch(query, p => searchModel.Price.HasValue && p.Price == searchModel.Price);
-            query = searchService.ApplySearch(query, p => searchModel.IsApproved.HasValue && p.IsApproved == searchModel.IsApproved);
-            query = searchService.ApplySearch(query, p => searchModel.IsDeleted.HasValue && p.IsDeleted == searchModel.IsDeleted);
-            query = searchService.ApplySearch(query, p => searchModel.CreateDate.HasValue && p.CreateDate == searchModel.CreateDate);
-            query = searchService.ApplySearch(query, p => searchModel.UpdateDate.HasValue && p.UpdateDate == searchModel.UpdateDate);
-            query = searchService.ApplySearch(query, p => searchModel.Stock.HasValue && p.Stock == searchModel.Stock);
-            query = searchService.ApplySearch(query, p => searchModel.CategoryId.HasValue && p.CategoryId == searchModel.CategoryId);
-            */
-
             // در شرط های زیر به ازای هر فیلد فرم جستجو که مقدار داشته باشد یک شرط به کوئری پایه مان اضافه می شود
 
             if (!string.IsNullOrEmpty(searchModel.Name))
@@ -260,11 +293,12 @@ namespace CRUD_FullProject_WebApi.Controllers
             foreach (var product in products)
             {
                 product.ImageUrl = StaticUrls.ProductImagesUrl + product.ImageUrl;
+                foreach (var image in product.Images)
+                {
+                    image.Image = StaticUrls.ProductImagesUrl + image.Image;
+                }
             }
 
-            // برای اینکه دوبار عملیات استخراج رکوردها از دیتابیس انجام نشود برای شمارش تعداد رکوردها به جای دستور قبلی
-            //  از این دستور استفاده می کنیم ولی در بخاطر صفجه بندی در شمارش تعداد کل رکوردها به مشکل میخوریم
-            //var totalItems = products.Count();
 
             var productDtos = _mapper.Map<List<ProductDtoGet>>(products);
 
@@ -279,6 +313,10 @@ namespace CRUD_FullProject_WebApi.Controllers
                 totalPage = totalItems / pageSize + 1;
             }
 
+            //برای نمایش محصولات به همراه اطلاعات صفحه بندی در انتهای آن
+            return Ok(new { Products = productDtos, TotalItems = totalItems, PageSize = pageSize, TotalPages = totalPage, PageNumber = pageNumber });
+
+            /*
             //برای ساخت یک شی جهت نمایش اطلاعات صفحه بندی در هدر
             var paginationHeader = new
             {
@@ -288,17 +326,15 @@ namespace CRUD_FullProject_WebApi.Controllers
                 totalPages = totalItems / pageSize + 1,
                 //Text = "Welcome Javad"
             };
-
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationHeader));
-
             return Ok(productDtos);
+            */
         }
 
         //[HttpGet("FilterEntities/{fieldName}/{searchValue}")]
         [HttpGet]
         public async Task<IActionResult> FilterEntities(string fieldName, string searchValue)
         {
-            //var query = _context.Products.AsQueryable();
             var query = _context.Products
                 .Include(p => p.Category)
                 .Include(p => p.Images)
@@ -319,6 +355,14 @@ namespace CRUD_FullProject_WebApi.Controllers
             query = filterService.ApplyFilter(lambda);
 
             var filteredEntities = await query.ToListAsync();
+            foreach (var product in filteredEntities)
+            {
+                product.ImageUrl = StaticUrls.ProductImagesUrl + product.ImageUrl;
+                foreach (var image in product.Images)
+                {
+                    image.Image = StaticUrls.ProductImagesUrl + image.Image;
+                }
+            }
 
             var productDtos = _mapper.Map<List<ProductDtoGet>>(filteredEntities);
 

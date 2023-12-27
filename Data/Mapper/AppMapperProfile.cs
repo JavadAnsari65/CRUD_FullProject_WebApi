@@ -14,7 +14,8 @@ namespace Data.Mapper
         public AppMapperProfile()
         {
             // Product
-            CreateMap<ProductDto, Product>().ReverseMap();
+            CreateMap<ProductDtoPost, Product>().ReverseMap();
+            CreateMap<ProductDtoGet, Product>().ReverseMap();
 
             // Category
             CreateMap<CategoryDto, Category>().ReverseMap();

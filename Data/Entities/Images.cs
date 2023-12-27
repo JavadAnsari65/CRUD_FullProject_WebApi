@@ -14,8 +14,8 @@ namespace Data.Entities
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Url { get; set; }
+        public string Caption{ get; set; }
+        public string Image { get; set; }
 
         [ForeignKey("ProductId")]
         public int ProductId { get; set; }

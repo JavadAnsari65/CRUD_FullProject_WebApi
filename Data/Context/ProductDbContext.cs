@@ -43,9 +43,17 @@ namespace Data.Context
                 .WithMany(c => c.Products)  //Navigation Property "Products" in Category Class
                 .HasForeignKey(p => p.CategoryId);  //ForeignKey Property in Product Class
 
+
+
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.Images)
                 .WithOne(i => i.Product)
+                .HasForeignKey(i => i.ProductId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Images>()
+                .HasOne(i => i.Product)
+                .WithMany(p => p.Images)
                 .HasForeignKey(i => i.ProductId)
                 .OnDelete(DeleteBehavior.Cascade);
 

@@ -12,8 +12,11 @@ namespace Data.Entities
     {
         [Key]
         public int Id { get; set; }
+        [Display(Name = "نام محصول")]
         public string Name { get; set; }
+        [Display(Name = "توضیحات")]
         public string Description { get; set; }
+        [Display(Name = "قیمت")]
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
         public bool IsApproved { get; set; }=false;

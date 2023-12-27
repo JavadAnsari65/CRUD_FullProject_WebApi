@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace Data.Dto
 {
-    public class ProductDto
+    //این کلاس فیلد جزئیات دسته بندی را هم دارد و برای نمایش اطلاعات کامل محصول استفاده می شود.
+    public class ProductDtoGet
     {
         //[Key]
         public int Id { get; set; }

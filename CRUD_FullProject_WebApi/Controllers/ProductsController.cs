@@ -157,6 +157,7 @@ namespace CRUD_FullProject_WebApi.Controllers
             product.Images = additionalImages;
 
             //اینجا میتوانیم فیلدهایی از محصول که در productDto نیست را مقداردهی کنیم
+            product.CreateDate = DateTime.Now;
 
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
@@ -182,23 +183,10 @@ namespace CRUD_FullProject_WebApi.Controllers
                 return NotFound();
             }
 
+            existingProduct.UpdateDate = DateTime.Now;
             _mapper.Map(productDto, existingProduct);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
             return Ok($"Product with Id {id} Updated.");
         }
